@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+		<title>回帖</title>
+		<script src="../js/jquery.min.js" th:src="@{/js/jquery.min.js}"></script>
+		<script src="../js/afquery.js" th:src="@{/js/afquery.js}"></script>
+		<script src="../js/xquery.js" th:src="@{/js/xquery.js}"></script>
+		<link rel="stylesheet" href="../css/common.css" th:href="@{/css/common.css}" />
+		
+		<style>
+			body{
+				background-color: #F6F7FB;
+			}		
+			.edit{
+				border:1px solid #ccc;
+			}
+			.edit .title{
+				box-sizing: border-box;
+				width:100%;
+				border-radius: 0px;
+				border: 0px solid #fff;
+				border-bottom: 1px dotted #ccc;
+				padding:10px 6px;
+				font-size:13px;
+				color: #333;
+			}
+			.edit .content{
+				border-radius: 0px;
+				box-sizing: border-box;
+				border: 0px solid #fff;
+				width:100%;
+				height: 200px;
+				padding:6px;
+				font-size:13px;
+				color: #333;
+				line-height: 150%;
+				tab-size: 3;
+			}
+					
+			.edit:hover{
+				border-color: #4285F4;
+			}
+			
+			.wrong{
+				padding: 40px;
+				min-height: 300px;
+				position: relative;
+				text-align: center;				
+			}
+			.wrong div{
+				font-size: 14px;
+				margin-top: 16px;
+			}
+			.wrong img.icon{
+				width: 80px;
+			}
+			
+		</style>
+		
+	</head>
+	<body>
+		<div th:insert="~{common::header}"></div>
+		
+		<div class="container">
+			<div th:switch="${ref.ref1.longValue()==0}" class="pad" style="padding: 10px; border-bottom: 1px solid #f4f4f4;">
+				<!-- 一级回复 -->
+				<a th:case="true" th:href="@{/reply/list(msgId=${ref.id})}">
+					<img th:src="@{/img/back.png}" style="width: 16px; transform: translateY(4px);" /> 返回原帖
+				</a>
+				
+				<!-- 二级回复 -->
+				<div th:case="false">
+					
+					<div th:switch="${ref.ref2.longValue()==0}">
+						<!-- 若引文是一级回复帖，则返回至引文1的ID帖子-->
+						<a th:case="true" th:href="@{/reply/list(msgId=${ref.ref1})}">
+							<img th:src="@{/img/back.png}" style="width: 16px; transform: translateY(4px);" /> 返回原帖
+						</a>
+						<!-- 若引文是二级回复帖，则返回至引文2的ID帖子-->
+						<a th:case="false" th:href="@{/reply/list(msgId=${ref.ref2})}">
+							<img th:src="@{/img/back.png}" style="width: 16px; transform: translateY(4px);" /> 返回原帖
+						</a>
+					
+					</div>
+				
+				</div>
+			</div>
+		</div>
+		
+		<div class="main container pad" style="padding: 10px;">
+			<div class="row">
+				<span class="label"> 原帖：</span>
+				<pre th:text="${ref.title}"></pre>
+			</div>
+			
+			<div class="form">
+				<span class="label"> 回复：</span><br />
+				<div class="edit">
+					<textarea class="content" placeholder="回复内容10字以上"></textarea>
+				</div>
+			</div>
+			
+			<div class="row">
+				<button class="primary" onclick="my.save()"> 发表回复 </button> &nbsp;
+			</div>
+		</div>
+	</body>
+	<script>
+		var my = {};
+		
+		my.msgId = '[[${ref.id}]]';
+		my.url = my.msgId;
+		
+		my.save = function()
+		{
+			var req = {};
+			req.refId1 = my.msgId;
+			
+			req.title = '';
+			req.content = $('.edit .content').val();
+			if($('.content').val().trim().length <= 0)
+			{
+				alert('请输入字符');
+				return;
+			}
+			
+			if(req.title.length == 0)
+			{
+				req.title = req.content.substring(0, 30);
+				req.title = req.title.replace(/\\n/g, '');
+			}
+			
+			X.rest('[[@{/u/reply/save.do}]]', req, function(data){
+				location.href = '[[@{/reply/list}]]' + '?msgId=' + my.url;
+			});
+		}
+		
+	</script>
+</html>

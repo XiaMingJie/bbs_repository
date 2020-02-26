@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+<title>Insert title here</title>
+		<script src="../js/jquery.min.js" th:src="@{/js/jquery.min.js}"></script>
+		<script src="../js/afquery.js" th:src="@{/js/afquery.js}"></script>
+		<script src="../js/xquery.js" th:src="@{/js/xquery.js}"></script>
+</head>
+<body>
+	<div>
+		<span th:if="${session.info!=null}" th:text="${session.info}"></span>
+		<span th:if="${session.info==null}">null</span>
+	</div>
+</body>
+</html>

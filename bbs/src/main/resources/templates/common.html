@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+		<script th:src="@{/js/jquery.min.js}"></script>
+		<script th:src="@{/js/afquery.js}"></script>
+		<link rel="stylesheet" th:href="@{/css/common.css}" />
+	</head>
+	<body>
+		<div th:fragment="header" class="header container">
+			<div class="left">
+				<a th:href="@{/message/list}">
+					<img th:src="@{/img/logo_bbs.png}" style="height: 30px;" />
+				</a>
+			</div>
+			
+			<div class="right">
+				<span th:switch="${session.user!=null}" class="item" style="position: relative; padding-left: 20px;">
+					<a th:case="true" th:href="@{/u/profile/edit}">
+						<img style="width: 20px; transform: translateY(3px);" th:if="${session.user.thumb!=null}" th:src="${session.user.thumb}" />
+						<img style="width: 20px; transform: translateY(3px);" th:case="false" th:src="@{/img/user2.png}" />
+						[[${session.user.name}]]
+					</a>
+					
+					<a th:case="false" href="javascript:void(0)" onclick="pleaseLogin()">请登录</a>
+					<script>
+						window.pleaseLogin = function()
+						{
+							location.href = '[[@{/login}]]' + "?returnUrl=" + location.href;
+						}
+					</script>
+				</span>
+			</div>
+		</div>
+	</body>
+</html>

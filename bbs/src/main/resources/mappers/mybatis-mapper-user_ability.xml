@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="mapper.userAbility">
+	<insert id="insert" parameterType="com.db.UserAbility">
+		 INSERT INTO `user_ability`
+        (`userId`, `banFlag`, `banDate`, `imageCount`, `imageMax`, `msgCount`, `msgMax`, `replyCount`, `replyMax`) 
+ 		 VALUES(#{userId}, #{banFlag}, #{banDate}, #{imageCount}, #{imageMax}, #{msgCount}, #{msgMax}, #{replyCount}, #{replyMax}) 
+		
+	</insert>
+	
+	<update id="initialize" parameterType="com.db.UserAbility">
+		update user_ability set msgCount=msgMax, imageCount=imageMax, replyCount=replyMax
+	</update>
+	
+	<select id="query" parameterType="java.lang.Integer" resultType="com.db.UserAbility">
+		select * from user_ability where userId=#{id}
+	</select>
+
+    <update id="msgCount" parameterType="java.lang.Integer">
+    	update user_ability set msgCount=msgCount-1 where userId=#{userId}
+    </update>
+    
+    <update id="replyCount" parameterType="java.lang.Integer">
+    	update user_ability set replyCount=replyCount-1 where userId=#{userId}
+    </update>
+    
+    <update id="imageCount" parameterType="java.lang.Integer">
+    	update user_ability set imageCount=imageCount-1 where userId=#{userId}
+    </update>
+</mapper>

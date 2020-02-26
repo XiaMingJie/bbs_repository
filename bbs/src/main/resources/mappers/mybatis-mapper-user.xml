@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="mapper.user">
+
+	<select id="query" resultType="com.db.User">
+		Select * from user
+	</select>
+	
+	<select id="userIdList" resultType="java.lang.Integer">
+		Select id from user
+	</select>
+
+	<!-- 通过引文查找用户 -->
+	<select id="userName" parameterType="hashmap" resultType="com.db.User">
+		select b.* from message a inner join `user` b on a.`creator`=b.`id` where a.`id`=#{ref1}
+	</select>
+	
+	<insert id="insert" parameterType="com.db.User" useGeneratedKeys="true" keyProperty="id">
+  INSERT INTO `user`
+        (`id`, `name`, `password`, `qqid`, `qq`, `qqFlag`, `qqName`, `email`, `emailFlag`, `phone`, `phoneFlag`, `thumb`, `level`, `vip`, `vipName`, `isAdmin`, `timeCreate`, `timeUpdate`, `timeLogin`) 
+  VALUES(#{id}, #{name}, #{password}, #{qqid}, #{qq}, #{qqFlag}, #{qqName}, #{email}, #{emailFlag}, #{phone}, #{phoneFlag}, #{thumb}, #{level}, #{vip}, #{vipName}, #{isAdmin}, #{timeCreate}, #{timeUpdate}, #{timeLogin}) 
+	</insert>
+	
+	<select id="login" resultType="com.db.User" parameterType="java.lang.String">
+		select * from user where name=#{name}
+	</select>
+	
+	<update id="photo" parameterType="com.db.User">
+		update user set thumb=#{thumb} where id=#{id}
+	</update>
+
+	<update id="updatePwd" parameterType="com.db.User">
+		update user set password=#{password} where id=#{id}
+	</update>
+          
+</mapper>

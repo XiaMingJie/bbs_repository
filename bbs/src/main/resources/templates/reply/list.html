@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8">
+		<title>查看回复</title>
+		<script src="../js/jquery.min.js" th:src="@{/js/jquery.min.js}"></script>
+		<script src="../js/afquery.js" th:src="@{/js/afquery.js}"></script>
+		<script src="../js/xquery.js" th:src="@{/js/xquery.js}"></script>
+		<script th:src="@{/layer/layer.js}"></script>
+		<link rel="stylesheet" href="../css/common.css" th:href="@{/css/common.css}" />
+		<style>
+			body{
+				background-color: #F6F7FB;
+			}
+
+			/* 正文内容显示 */
+			pre{
+				background-color: #fff;
+				padding: 10px 20px;
+				min-height: 60px;
+				color: #222;
+			}	
+			
+			.pre-style{
+				min-height: 0px; 
+				margin-bottom: 0px;
+			}
+
+			.ref{
+				min-height: 240px;
+			}
+			/* 原文 */
+			.ref .msginfo{
+				position: relative;
+				padding:6px; 
+				padding-left:60px;
+				background-color: #fcfcfc;
+			}
+			
+			/* 表格形式的回复显示 */
+			.reply{
+				width:100% ;
+				border: 1px solid #f1f1f1;
+				background-color: #fff;
+				margin-top:4px;
+			}
+			.reply .item{
+				border-bottom: 1px solid #f1f1f1;
+				font-size:14px;
+			}	
+			.reply td{
+				border-width: 0px;
+			}
+			.reply .c1{
+				padding: 6px;
+				text-align: center;
+				width: 120px;
+				background-color: #fcfcfc;
+			}
+			.reply .c2{
+				padding: 6px;
+				text-align: left;
+				width: calc(100% - 124px);
+			}
+			.reply .author{
+				color: #3078c2;
+			}
+			.reply .usericon{
+				width:40px;
+				margin:4px 0 8px 0;
+			}
+			/* 附件图片 */	
+			.attachment{
+				max-width: 90%;
+				max-height: 400px;
+				margin: 10px;
+				text-align: center;;
+			}
+			
+			/* 管理操作 */
+			.manage{
+				display: none;
+				padding:3px;
+				margin:3px;
+				text-align: right;
+			}
+			.manage button {
+				font-size:12px;
+				padding:3px 6px;
+				background-color: #c0d3fb;
+				border-color: #c0d3fb;
+				margin-left: 10px;
+			}
+		</style>
+	</head>
+	<body>
+		<div th:insert="~{common::header}"></div>
+		
+		<div class="main container">
+			<div th:switch="${ref.ref1.longValue()==0}" class="pad" style="padding: 10px; border-bottom: 1px solid #f4f4f4;">
+				<a th:case="true" th:href="@{/message/list}">
+					<img th:src="@{/img/back.png}" style="width: 16px; transform: translateY(4px);" />返回版面
+				</a>
+				<!-- 非主帖 -->
+				<div th:case="false">
+					<a th:if="${ref.ref2==0}" th:href="@{/reply/list(msgId=${ref.ref1})}">
+						<img th:src="@{/img/back.png}" style="width: 16px; transform: translateY(4px);" />返回原帖
+					</a>
+					<a th:if="${ref.ref2!=0}" th:href="@{/reply/list(msgId=${ref.ref2})}">
+						<img th:src="@{/img/back.png}" style="width: 16px; transform: translateY(4px);" />返回原帖
+					</a>
+				</div>
+				
+			</div>
+				
+			
+			<!-- 原文 -->
+			<div class="ref">
+				<div class="msginfo">
+					<img class="vcenter usericon" th:src="${ref.thumb}" style="width: 36px; left: 10px;" />
+					<span class="author">[[${ref.name}]]</span>
+					<br />
+					<span style="color: #888;">楼主</span> &nbsp;&nbsp;
+					<span style="color: #888;">[[${ref.timeCreate}]]</span>
+				</div>
+					<pre th:text="${ref.content}" style="padding-left: 60px;"></pre>
+			</div>
+			
+			<!-- 附件图片显示 -->
+			<div style="padding: 10px 20px; text-align: center;">
+				<a th:if="${ref.img1.length()>0}" th:href="${ref.img1}" target="_self">
+					<img class="attachment" th:src="${ref.img1}" />
+				</a><br />
+				<a th:if="${ref.img2.length()>0}" th:href="${ref.img2}" target="_self">
+					<img class="attachment" th:src="${ref.img2}" />
+				</a><br />
+				<a th:if="${ref.img3.length()>0}" th:href="${ref.img3}" target="_self">
+					<img class="attachment" th:src="${ref.img3}" />
+				</a><br />
+			</div>
+			
+			<div style="text-align: left; font-size: 13px; color: #555">
+				<span style="margin: 10px;">共[[${#lists.size(replyList)}]]条回复</span>&nbsp;
+				<div class="useractions" style="display: inline-block;">
+					<a th:rowid="${ref.id}" 
+					th:if="${session.user!=null && ref.creator.intValue()==session.user.id}"
+					href="javascript:void(0)" onclick="my.userSetFlags(this, 'del', 'back')">删帖</a>
+					
+					<a th:if="${session.user!=null && session.user.isAdmin}"
+					 href="javascript:void(0)" onclick="$('.manage').show()" style="margin: 0 10px;">管理</a>
+	
+				</div>
+			</div>
+			
+			<div th:if="${session.user!=null && session.user.isAdmin}" class="manage"
+			 th:rowid="${ref.id}">
+				 <button onclick="my.userSetFlags(this, 'top', 'reload')" th:if="${ref.topFlag>0}">取消置顶</button>
+				 <button onclick="my.userSetFlags(this, 'top', 'reload')" th:if="${ref.topFlag==0}">置顶</button>
+				 <button onclick="my.userSetFlags(this, 'nice', 'reload')" th:if="${ref.niceFlag>0}">取消精华</button>
+				 <button onclick="my.userSetFlags(this, 'nice', 'reload')" th:if="${ref.niceFlag==0}">精华</button>
+				 <button onclick="my.userSetFlags(this, 'del', 'back')">删除</button>
+			</div>
+		</div>
+		
+		<!-- 回复列表 -->
+		<div class="container">
+			<!-- PC上以表格显示 -->
+			<table class="reply">
+				<tr class="item" th:each="row, state : ${replyList}">
+					<td class="c1" style="vertical-align: top; padding: 6px;">
+						<img class="usericon" th:src="${row.thumb}" /><br />
+						<span class="author">[[${row.name}]]</span><br />
+						<img th:if="${row.creator.intValue()==ref.creator.intValue()}" class="icon" th:src="@{/img/this.png}" />
+					</td>
+					<td class="c2">
+						<pre class="pre-style" th:if="${row.ref2.longValue()==ref.id}"><a href="javascript:void(0)">@[[${row.refName}]]:</a>[[${row.content}]] &nbsp;<a th:href="@{/reply/list(msgId=${row.ref1})}">查看对话</a>
+							</pre>
+						 <pre class="pre-style" th:if="${row.ref1.longValue()==ref.id}"
+						  th:text="${row.content}"></pre>
+						  
+						<div style="text-align: right; padding: 6px;">
+							<a th:rowid="${row.id}" th:refid="${ref.id}" 
+							th:href="@{/u/reply/add(refId1=${row.id})}">回复</a>
+							<a th:rowid="${row.id}" 
+							th:if="${session.user!=null && row.creator.intValue()==session.user.id}"
+							href="javascript:void(0)" onclick="my.userSetFlags(this, 'del', 'reload')">删除</a>
+							<span style="color: #666;">第[[${baseIndex+state.index+1}]]楼</span>
+							<span style="color: #666;">[[${row.timeCreate}]]</span>
+						</div>
+					</td>
+				</tr>
+			</table>
+			<div style="padding: 10px;">
+				<div class="page-index-bar" style="margin: 0px;"></div>
+			</div>
+		</div>
+		
+		<div class="container" style="padding: 12px;">
+			<div th:if="${session.user==null}">
+				请先 <a href="javascript:void(0)" onclick="pleaseLogin()">登录</a> 之后才能回复
+			</div>
+			<div th:if="${session.user!=null}">
+				<a class="primary" th:href="@{/u//reply/add(refId1=${ref.id})}">回复</a>
+				
+				<div style="display: inline-block; vertical-align: middle;">
+				
+					<span style="width: 20px; min-height: 30px;"></span>
+					<img th:if="${isCollector==0}" style="width: 30px; height: 30px; cursor: pointer;" onclick="my.addCollect(this)" class="icon" th:src="@{/img/collect0.png}" alt="收藏"/>
+					<img th:if="${isCollector!=0}" style="width: 30px; height: 30px; cursor: pointer;" onclick="my.addCollect(this)" class="icon" th:src="@{/img/collect1.png}" alt="取消收藏" />
+					<span style="width: 10px; min-height: 30px;"></span>
+					<img th:src="@{/img/share.png}" style="width: 30px; height: 30px; cursor: pointer;" onclick="my.share()" class="icon" alt="分享给好友" />
+				</div>
+			</div>
+			<script>
+				window.pleaseLogin = function()
+				{
+					location.href = '[[@{/login}]]' + "?returnUrl=" +  location.href;
+				}
+			</script>
+		</div>
+	</body>
+	<script>
+		var my = {};
+		my.msgId = [[${ref.id}]] ;
+	
+		var pageCount = [[${pageCount}]];
+		var pageNumber = [[${pageNumber}]];
+		var pageUrl = '[[@{/reply/list}]]' ;
+		
+		// 初始化执行: 分页显示
+		my.initPage = function(){
+			var str = "";			
+			var skipped = false;
+			for(var i=1; i<=pageCount; i++)
+			{
+				// 如果页面数过多，则添加一个省略号
+				if(i< pageNumber - 2 && i >= 2)
+				{
+					if(!skipped ) str += "...";
+					skipped = true;
+					continue;
+				}
+				if(i> pageNumber + 2 && i <= pageCount - 1)
+				{
+					if(!skipped ) str += "...";
+					skipped = true;
+					continue;
+				}
+				skipped = false;
+				
+				// 当前页码： 以高亮显示
+				if(i == pageNumber)
+					str += "<label class='page static'> ##1 </label>".replace(/##1/g, i);
+				else
+					str += "<a class='page' href='##0?pageNumber=##1'> ##1 </a>"
+						.replace(/##0/g, pageUrl)
+						.replace(/##1/g, i);
+		
+				$('.page-index-bar').html(str);	
+			}
+			
+		}(); // 立即执行 my.initPage()
+		
+		/* 给缺省图片添加默认处理 */
+		$('img.usericon').each( function(index, elem){
+			var src = $(elem).attr('src');
+			if(src == null || src.length==0)
+				$(elem).attr('src', '[[@{/img/user.jpg}]]')	;		
+		})
+		
+		//更改帖子属性
+		my.userSetFlags = function(dom, cmd, action)
+		{
+			var prompText = $(dom).text();
+			//if(!confirm('确认操作:' + prompText + '?'))return;
+			
+			layer.confirm('确认操作:' + prompText + '?', {
+				btn:['确认', '取消']
+				}, function(){
+					var rowid = Number($(dom).attr('rowid'));
+					if(isNaN(rowid))
+						rowid = Number($(dom).parent().attr('rowid'));
+					var req = {};
+					req.msgId = rowid;
+					req.cmd = cmd;
+					
+					X.rest('[[@{/u/message/userSetFlags.do}]]', req, function(data){
+						layer.msg(prompText + '成功', {time: 1500, icon: 1, end:function(){
+							if(action == 'back') location.href = '[[@{/message/list}]]';
+							if(action == 'reload') location.reload();
+						}});
+					});
+				}, function(){
+					return;
+				});
+		}
+		
+		/* 添加收藏 */
+		my.addCollect = function(dom)
+		{
+			var req = {};
+			req.msgId = my.msgId;
+			
+			var imgSrc = $(dom).attr('src');
+			
+			X.rest('[[@{/u/collect/addCollect.do}]]', req, function(data){
+				if(imgSrc == '/img/collect0.png')
+				{
+					$(dom).attr('src', '/img/collect1.png');
+					layer.msg('已收藏', {time:1500, icon: 1});
+				}
+				else
+				{
+					$(dom).attr('src', '/img/collect0.png');
+					layer.msg('取消收藏', {time:1500, icon: 1});
+				}
+					
+			});
+		}
+		
+		/* 分享 */
+		my.share = function()
+		{
+			layer.open({
+				title: '分享好友',
+				type: 1,
+				skin: 'layui-layer-rim',
+				area: ['420px', '240px'],
+				content: '   赶快复制此段信息分享给好友吧：' + location.href
+			});
+		}
+	</script>
+</html>

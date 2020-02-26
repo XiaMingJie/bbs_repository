@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+		<title>发生错误了</title>
+		<link rel="stylesheet" href="../css/common.css" th:href="@{/css/common.css}" />
+	</head>
+	<body>
+		<div class="container" style="width: 80%; margin: 40px auto auto auto;">
+			<div class="row" style="border: 1px solid #000000; padding: 10px; font-weight: bold;">
+				oh!出错了
+			</div>
+			<div class="row" style="color: red;">
+				<span th:text="${message}">未知错误</span>
+			</div>
+			
+			<div class="row">
+				<button onclick="my.msgView()"> 详情 </button>
+				<pre th:text="${data}">无</pre>
+			</div>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="mapper.reply">
+
+	
+	<select id="query" parameterType="java.lang.Long" resultType="com.db.Message">
+		SELECT * from message where id=#{msgId};
+	</select>
+	
+	<insert id="insert" parameterType="com.db.Message">
+		 INSERT INTO `message`
+        (`id`, `creator`, `title`, `content`, `cat1`, `cat2`, `cat3`, `ref1`, `ref2`, `refstr`, `timeCreate`, `timeUpdate`, `niceFlag`, `topFlag`, `banFlag`, `delFlag`, `closeFlag`, `numReply`, `numLike`, `storePath`, `imgCount`, `img1`, `img2`, `img3`, `replyUser`, `replyName`, `replyTime`, `replyText`) 
+  VALUES(#{id}, #{creator}, #{title}, #{content}, #{cat1}, #{cat2}, #{cat3}, #{ref1}, #{ref2}, #{refstr}, #{timeCreate}, #{timeUpdate}, #{niceFlag}, #{topFlag}, #{banFlag}, #{delFlag}, #{closeFlag}, #{numReply}, #{numLike}, #{storePath}, #{imgCount}, #{img1}, #{img2}, #{img3}, #{replyUser}, #{replyName}, #{replyTime}, #{replyText}) 
+	</insert>
+	
+	<update id="update" parameterType="hashmap">
+		update message 
+		set numReply=numReply+1, 
+		replyUser=#{replyUser}, 
+		replyName=#{replyName}, 
+		replyTime=#{replyTime}, 
+		replyText=#{replyText} 
+		where id=#{msgId};
+	</update>
+	
+	<select id="messageInfo" parameterType="java.lang.Long" resultType="hashmap">
+		select a.*, b.name, b.vipName, b.thumb from message a, user b where a.creator=b.id and a.id=#{msgId}
+	</select>
+	
+	<select id="replyList" parameterType="hashmap" resultType="hashmap">
+		SELECT a.*, b.`name`, b.`vipName`, b.`thumb`  
+		FROM message a INNER JOIN `user` b ON a.`creator`=b.`id` 
+		WHERE (a.`ref1`=#{ref1} AND a.`delFlag`=0) OR (a.`ref2`=#{ref1} AND a.`delFlag`=0)
+		ORDER BY a.`timeCreate` DESC, a.`topFlag` DESC
+		LIMIT #{startIndex},#{pageSize}
+	</select>
+          
+</mapper>
