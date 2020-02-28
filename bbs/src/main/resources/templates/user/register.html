@@ -109,7 +109,7 @@
 			}
 			
 			X.rest('[[@{/register.do}]]'  , req, function(data){
-				alert('注册成功');
+				layer.msg('注册成功', {time:1500, icon:1});
 				location.href = '[[@{/}]]' ;  // 跳到首页
 			})
 		}
