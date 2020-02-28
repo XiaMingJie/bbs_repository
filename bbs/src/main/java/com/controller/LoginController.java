@@ -1,6 +1,7 @@
 package com.controller;
 
 import java.util.List;
+import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -46,8 +47,8 @@ public class LoginController
 		user.vipName = "";
 		user.level = 0;
 
-//		if(user.password.length() > 0)
-//			user.password = MyUtil.md5(user.password);
+		if(user.password.length() > 0)
+			user.password = MyUtil.md5(user.password);
 		try(SqlSession db = MyBatis.factory.openSession())
 		{
 			List<User> userList = db.selectList("mapper.user.query");
@@ -76,6 +77,7 @@ public class LoginController
 	public String login(Model model, String returnUrl)
 	{
 		if(returnUrl == null) returnUrl = "";
+
 		model.addAttribute("returnUrl", returnUrl);
 		return "user/login";
 	}
@@ -100,10 +102,10 @@ public class LoginController
 			if(user == null)
 				return new RestError("该用户名不存在!");
 			
-			//String pwdMd5 = MyUtil.md5(password);
+			String pwdMd5 = MyUtil.md5(password);
 			
-			//if(!user.password.equals(pwdMd5))
-			if(!user.password.equals(password))
+			if(!user.password.equals(pwdMd5))
+			//if(!user.password.equals(password))
 				return new RestError("用户名密码不匹配");
 			
 			LoginUserUtil.login(session, user);

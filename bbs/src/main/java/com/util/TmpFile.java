@@ -1,5 +1,7 @@
 package com.util;
 
+import org.springframework.util.ResourceUtils;
+
 import java.io.File;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,9 +15,15 @@ public class TmpFile
 	//临时文件目录：WebRoot\tmp\
 	public static File getDir(HttpServletRequest request)
 	{
-		return new File(request.getServletContext().getRealPath("/tmp"));
+		try{
+			String docPath = ResourceUtils.getURL("classpath:").getPath();
+			return new File(docPath + "/static/tmp");
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return null;
 	}
-	
+
 	//获取临时文件
 	public static File getFile(HttpServletRequest request, String tmpName)
 	{

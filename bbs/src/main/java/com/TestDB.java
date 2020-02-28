@@ -4,16 +4,19 @@ import com.util.MyUtil;
 import org.apache.commons.codec.binary.Hex;
 
 import java.security.MessageDigest;
+import java.util.Random;
 
 public class TestDB {
+    public static void randomNumber()
+    {
+        Random random = new Random();
+        int num = random.nextInt(4);
+        System.out.println(num);
+    }
+
     public static void main(String[] args) {
         try{
-            String text = "202cb962ac59075b964b07152d234b70";
-            String pwd = "123";
-
-            pwd = MyUtil.md5(pwd);
-
-            System.out.println(pwd.equals(text));
+            randomNumber();
         }catch(Exception e){
             e.printStackTrace();
         }
