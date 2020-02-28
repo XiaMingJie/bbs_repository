@@ -28,6 +28,11 @@ public class FileStore
 		this.urlPrefix = urlPrefix;
 		this.rootDir.mkdirs();
 	}
+
+	public File getDir()
+	{
+		return rootDir;
+	}
 	
 	//传入相对路径path（path=数据库message.storePath+message.img)，返回File
 	public File getFile(String path)

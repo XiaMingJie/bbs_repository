@@ -12,6 +12,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 
 import com.task.*;
+import com.util.FileStore;
 import org.springframework.core.annotation.Order;
 
 @WebFilter(filterName = "bootFilter")
@@ -29,8 +30,7 @@ public class B_BootFilter implements Filter
 	{
 		// TODO Auto-generated method stub
 		daily.addTask(new MsgDelTask(), "清理message表");
-		daily.addTask(new TmpFileClearTask(
-				new File(arg0.getServletContext().getRealPath("/tmp"))), "清理/tmp过期文件");
+		daily.addTask(new TmpFileClearTask(FileStore.tmpStore.getDir()), "清理/tmp过期文件");
 		daily.addTask(new UserAbilityInitTask(), "初始化用户权利");
 
 		daily.addTask(new CollectDelTask(), "清理collect表");
