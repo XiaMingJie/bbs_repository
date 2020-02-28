@@ -11,6 +11,7 @@ import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.util.FileStore;
 import org.apache.commons.io.FileUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Controller;
@@ -98,7 +99,7 @@ public class MessageController
 		if(tmpName == null || tmpName.length() == 0) return "";
 		
 		//获得临时文件
-		File tmpFile = TmpFile.getFile(request, tmpName);
+		File tmpFile = FileStore.tmpStore.getFile(tmpName);
 		//获得本地存储路径
 		File storeFile = MsgImgController.store.getFile(storePath);
 		try

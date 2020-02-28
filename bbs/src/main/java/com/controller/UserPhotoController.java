@@ -47,7 +47,7 @@ public class UserPhotoController
 			String tmpName = MyUtil.guid2() + suffix;
 			
 			//获得临时文件路径
-			File tmpFile = TmpFile.getFile(request, tmpName);
+			File tmpFile = FileStore.tmpStore.getFile( tmpName);
 			
 			//接收上传
 			mf.transferTo(tmpFile);
@@ -61,7 +61,7 @@ public class UserPhotoController
 			
 			result.put("realName", realName);
 			result.put("tmpName", tmpName);
-			result.put("tmpUrl", TmpFile.getUrl(request, tmpName));
+			result.put("tmpUrl", FileStore.tmpStore.getUrl( tmpName));
 			result.put("url", url);
 		}
 		

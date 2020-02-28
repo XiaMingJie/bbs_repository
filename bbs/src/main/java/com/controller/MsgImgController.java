@@ -48,7 +48,7 @@ public class MsgImgController
 			String tmpName = MyUtil.guid2() + suffix;
 			
 			//获得临时文件
-			File tmpFile = TmpFile.getFile(request, tmpName);
+			File tmpFile = FileStore.tmpStore.getFile(tmpName);
 			
 			//接收上传
 			mf.transferTo(tmpFile);
@@ -59,7 +59,7 @@ public class MsgImgController
 			
 			result.put("realName", realName);
 			result.put("tmpName", tmpName);
-			result.put("tmpUrl", TmpFile.getUrl(request, tmpName));
+			result.put("tmpUrl", FileStore.tmpStore.getUrl(tmpName));
 		}
 		
 		//图片次数减一

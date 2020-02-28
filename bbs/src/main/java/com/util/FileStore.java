@@ -7,6 +7,8 @@ import java.io.File;
  * */
 public class FileStore
 {
+	public static FileStore tmpStore = new FileStore("C:/bbsfile/tmp", "/bbsfile/tmp/");
+
 	public File rootDir = new File("C:/bbsfile/message/");
 	public String urlPrefix = "/bbsfile/message";
 
