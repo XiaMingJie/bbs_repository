@@ -160,6 +160,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
+        <finalName>bbs-mingjieyun-cn</finalName>
         <resources>
             <resource>
                 <directory>lib</directory>
@@ -167,6 +168,29 @@
                 <includes>
                     <include>**/*.jar</include>
                 </includes>
+            </resource>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.xml</include>
+                    <include>**/*.properties</include>
+                </includes>
+                <filtering>true</filtering>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*.properties</include>
+                    <include>**/*.xml</include>
+                    <include>**/*.tld</include>
+                    <include>**/*.jpg</include>
+                    <include>**/*.jpeg</include>
+                    <include>**/*.png</include>
+                    <include>**/*.css</include>
+                    <include>**/*.js</include>
+                    <include>**/*.html</include>
+                </includes>
+                <filtering>true</filtering>
             </resource>
         </resources>
     </build>
