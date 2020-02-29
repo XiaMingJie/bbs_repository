@@ -103,6 +103,54 @@
             <systemPath>${project.basedir}/lib/thumbnailator-0.4.8.jar</systemPath>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.http</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.8</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/httpclient-4.5.8.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.http</groupId>
+            <artifactId>httpclient-cache</artifactId>
+            <version>4.5.8</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/httpclient-cache-4.5.8.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.http</groupId>
+            <artifactId>httpclient-osgi</artifactId>
+            <version>4.5.8</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/httpclient-osgi-4.5.8.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.http</groupId>
+            <artifactId>httpclient-win</artifactId>
+            <version>4.5.8</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/httpclient-win-4.5.8.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.http</groupId>
+            <artifactId>httpcore</artifactId>
+            <version>4.4.11</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/httpcore-4.4.11.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.http</groupId>
+            <artifactId>httpmime</artifactId>
+            <version>4.5.8</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/httpmime-4.5.8.jar</systemPath>
+        </dependency>
+
     </dependencies>
 
     <build>

@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class PathAdapter
 {
-	@GetMapping({"", "/", "/index.html"})
+	@GetMapping({"", "/", "/index.html", "/index"})
 	public String index()
 	{
 		return "forward:/message/list";
