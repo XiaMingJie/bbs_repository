@@ -74,8 +74,12 @@ public class LoginController
 	
 	@GetMapping("/login")
 	//returnUrl：当出现重定向到该页面时，登录后需要返回到源页面，returnUrl即是传过来的源地址
-	public String login(Model model, String returnUrl)
+	public String login(Model model, HttpSession session, String returnUrl)
 	{
+		User user = (User)session.getAttribute("user");
+		if(user != null)
+			return "forward:/message/list";
+
 		if(returnUrl == null) returnUrl = "";
 
 		model.addAttribute("returnUrl", returnUrl);

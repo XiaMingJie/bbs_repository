@@ -107,7 +107,7 @@ public class QQController {
             session.setAttribute("user", user);
         }
 
-        return "/index";
+        return "user/login";
     }
 
     //从应答中提取access_token值
