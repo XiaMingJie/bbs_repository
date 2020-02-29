@@ -21,7 +21,7 @@
 	<insert id="insert" parameterType="com.db.User" useGeneratedKeys="true" keyProperty="id">
   INSERT INTO `user`
         (`id`, `name`, `password`, `qqid`, `qq`, `qqFlag`, `qqName`, `email`, `emailFlag`, `phone`, `phoneFlag`, `thumb`, `level`, `vip`, `vipName`, `isAdmin`, `timeCreate`, `timeUpdate`, `timeLogin`) 
-  VALUES(#{id}, #{name}, #{password}, #{qqid}, #{qq}, #{qqFlag}, #{qqName}, #{email}, #{emailFlag}, #{phone}, #{phoneFlag}, #{thumb}, #{level}, #{vip}, #{vipName}, #{isAdmin}, #{timeCreate}, #{timeUpdate}, #{timeLogin}) 
+  VALUES(#{id}, #{name}, #{password}, #{qqid}, #{qq}, #{qqFlag}, #{qqName}, #{email}, #{emailFlag}, #{phone}, #{phoneFlag}, #{thumb}, #{level}, #{vip}, #{vipName}, #{isAdmin}, #{timeCreate}, #{timeUpdate}, #{timeLogin})
 	</insert>
 	
 	<select id="login" resultType="com.db.User" parameterType="java.lang.String">
@@ -35,5 +35,17 @@
 	<update id="updatePwd" parameterType="com.db.User">
 		update user set password=#{password} where id=#{id}
 	</update>
+
+	<!-- 查询该用户的openid（使用QQ登录） -->
+	<select id="query_openid" parameterType="java.lang.String" resultType="com.db.User">
+		select * from user where qqid={openid}
+	</select>
+
+	<insert id="insert_qq" parameterType="com.db.User" useGeneratedKeys="true" keyProperty="id">
+		insert into `user`
+		(`id`, `name`, `qqid`)
+		values
+		(#{id}, #{name}, #{qqid})
+	</insert>
           
 </mapper>
