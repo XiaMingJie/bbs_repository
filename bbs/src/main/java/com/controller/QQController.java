@@ -2,6 +2,7 @@ package com.controller;
 
 import com.db.MyBatis;
 import com.db.User;
+import com.db.UserAbility;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.util.HTTP;
@@ -35,11 +36,15 @@ public class QQController {
         String qqState = String.valueOf(rand);
         session.setAttribute("qqState", qqState);
 
+        if(session.getAttribute("qqState") != null)
+            System.out.println("qqState添加进session");
+
         String qqAuthUrl = "https://graph.qq.com/oauth2.0/authorize"
                 + "?response_type=code"
                 + "&client_id=" + appID
                 + "&state=" + qqState
-                + "&redirect_uri=" + callbackUrl;
+                + "&redirect_uri=" + callbackUrl
+                ;
 
         return "redirect:" + qqAuthUrl;
     }
@@ -56,6 +61,8 @@ public class QQController {
     {
         /* 校验此次访问是否合法 */
         String qqState = (String) session.getAttribute("qqState");
+        if(qqState == null)
+            System.out.println("session中qqState为空");
         if(!qqState.equals(state))
         {
             //重新登录
@@ -70,7 +77,7 @@ public class QQController {
                 + "&client_id=" + appID
                 + "&client_secret=" + appSecret
                 + "&code=" + code
-                + "redirect_uri=http://www.mingjieyun.cn/qq/callback"
+                + "&redirect_uri=http://www.mingjieyun.cn/qq/callback"
                 ;
 
         HTTP http = new HTTP();
@@ -101,13 +108,20 @@ public class QQController {
 
                 //插入一条qq数据
                 db.insert("mapper.user.insert_qq", user);
+
+                //用户权利
+                UserAbility userAbility = new UserAbility();
+                UserAbilityUtil.init(userAbility, user.id);
+
+                db.insert("mapper.userAbility.insert", userAbility);
+
                 db.commit(true);
             }
 
-            session.setAttribute("user", user);
+            LoginUserUtil.login(session, user);
         }
 
-        return "user/login";
+        return "forward:/message/list";
     }
 
     //从应答中提取access_token值
@@ -136,7 +150,7 @@ public class QQController {
             {
                 String jsonstr = reply.substring(p1+1, p2);
                 System.out.println("jsonstr:" + jsonstr);
-                JsonObject json = (JsonObject) new Gson().toJsonTree(jsonstr);
+                JsonObject json = (JsonObject) new Gson().fromJson(jsonstr, JsonObject.class);
                 if(json.has("openid"))
                 {
                     return json.get("openid").getAsString();
