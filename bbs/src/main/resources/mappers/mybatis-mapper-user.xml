@@ -28,6 +28,10 @@
 		select * from user where name=#{name}
 	</select>
 	
+	<select id="name_is_exist" parameterType="java.lang.String" resultType="java.lang.Integer">
+		select count(*) `user` where name=#{name}
+	</select>
+	
 	<update id="photo" parameterType="com.db.User">
 		update user set thumb=#{thumb} where id=#{id}
 	</update>
@@ -41,6 +45,7 @@
 		select * from user where qqid=#{openid}
 	</select>
 
+	<!-- 废弃 -->
 	<insert id="insert_qq" parameterType="com.db.User" useGeneratedKeys="true" keyProperty="id">
 		insert into `user`
 		(`id`, `name`, `qqid`)

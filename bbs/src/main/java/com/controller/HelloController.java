@@ -14,18 +14,27 @@ import xspring.RestData;
 public class HelloController
 {
 	@GetMapping("/hello")
-	public Object hello()
+	public Object hello(HttpSession session)
 	{
+		session.setAttribute("code", 1002);
+
+		return "redirect:/view?returnUrl=/goodby";
+	}
+
+	@GetMapping("/goodby")
+	public Object goodby(HttpSession session)
+	{
+		int code = (int)session.getAttribute("code");
+
 		JsonObject json = new JsonObject();
-		json.addProperty("data", "hello");
+		json.addProperty("code", code);
 		return new RestData(json);
 	}
 
-	@GetMapping("/view.do")
-	public Object view(HttpSession session)
+	@GetMapping("/view")
+	public Object view(HttpSession session, String returnUrl)
 	{
-		String info = (String) session.getAttribute("info");
-		return new RestData(info);
+		return "redirect:"+returnUrl;
 	}
 	
 	@GetMapping("/test.do")
